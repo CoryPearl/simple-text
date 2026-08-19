@@ -5,7 +5,7 @@
       ./run.sh
 
     Run:
-      ./main [file.md|file.markdown|file.txt|file.html|file.htm]
+      ./main [file]
 
     Controls:
       Cmd+O  open a file
@@ -20,8 +20,8 @@
       Click+drag or Shift+arrows  select text
       Cmd+C/X/V  copy/cut/paste selection (or current line if nothing selected)
       Trackpad swipe or Shift+scroll to scroll left/right (only when a line overflows the view)
-      Drag and drop a .md, .markdown, .txt, .html, or .htm file to open it.
-      Double-click a supported file in Finder to open it here, once packaged
+      Drag and drop any file to open it as text.
+      Double-click or use Open With in Finder to open files here, once packaged
       as an .app with the Info.plist in this project (see package_mac_app.sh).
 */
 
@@ -111,6 +111,8 @@ static float editor_font_size = 18.0f;
 static int preview_link_opened = 0;
 static int mouse_selecting = 0;
 
+static const char *base_name(const char *path);
+
 static char *str_dup_c(const char *s) {
     size_t n = strlen(s);
     char *out = (char *)malloc(n + 1);
@@ -132,6 +134,12 @@ static int has_supported_ext(const char *path) {
     for (; dot[i] && i < (int)sizeof(ext) - 1; i++) ext[i] = (char)tolower((unsigned char)dot[i]);
     return strcmp(ext, ".md") == 0 || strcmp(ext, ".markdown") == 0 || strcmp(ext, ".txt") == 0 ||
            strcmp(ext, ".html") == 0 || strcmp(ext, ".htm") == 0;
+}
+
+static int has_any_ext(const char *path) {
+    const char *name = base_name(path);
+    const char *dot = strrchr(name, '.');
+    return dot && dot[1] != '\0';
 }
 
 static int is_markdown_path(const char *path) {
@@ -261,11 +269,6 @@ static void editor_new(Editor *e) {
 }
 
 static int editor_load(Editor *e, const char *path) {
-    if (!has_supported_ext(path)) {
-        set_status("Only .md, .markdown, .txt, .html, and .htm files are supported");
-        return 0;
-    }
-
     FILE *f = fopen(path, "rb");
     if (!f) {
         set_status("Could not open file");
@@ -318,11 +321,6 @@ static int editor_load(Editor *e, const char *path) {
 }
 
 static int editor_save_as(Editor *e, const char *path) {
-    if (!has_supported_ext(path)) {
-        set_status("Save path must end in .md, .markdown, .txt, .html, or .htm");
-        return 0;
-    }
-
     FILE *f = fopen(path, "wb");
     if (!f) {
         set_status("Could not save file");
@@ -400,7 +398,7 @@ static int save_file_dialog(Editor *e) {
         return 0;
     }
 
-    if (!has_supported_ext(path)) {
+    if (!has_any_ext(path)) {
         size_t len = strlen(path);
         if (len + 3 < sizeof(path)) strcat(path, ".md");
     }

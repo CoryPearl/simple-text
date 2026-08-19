@@ -4,7 +4,8 @@ Simple Txt is a small macOS text editor built with C and raylib. It focuses on p
 
 ## Features
 
-- Edit `.txt`, `.md`, `.markdown`, `.html`, and `.htm` files
+- Open any file as text
+- Edit `.txt`, `.md`, `.markdown`, `.html`, `.htm`, and other text-like files
 - Toggle between Markdown text and rendered preview
 - Open links directly from Markdown preview
 - Native macOS Open and Save dialogs
