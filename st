@@ -13,6 +13,16 @@ done
 
 APP_DIR=$(CDPATH= cd -- "$(dirname -- "$SOURCE")" && pwd)
 CALL_DIR=$(pwd)
+APP_BIN="$APP_DIR/main"
+
+if [ ! -f "$APP_DIR/main.c" ]; then
+  APP_BIN="$APP_DIR/simple-txt"
+  if [ ! -x "$APP_BIN" ]; then
+    echo "st: installed Simple Txt binary not found at $APP_BIN" >&2
+    echo "st: run ./install_cli.sh from the Simple Txt source folder to reinstall it" >&2
+    exit 1
+  fi
+fi
 
 ARGS=
 for arg in "$@"; do
@@ -26,7 +36,7 @@ done
 
 cd "$APP_DIR"
 
-if [ ! -x ./main ] || [ main.c -nt main ]; then
+if [ -f "$APP_DIR/main.c" ] && { [ ! -x "$APP_BIN" ] || [ "$APP_DIR/main.c" -nt "$APP_BIN" ]; }; then
   gcc main.c -o main \
     -I/opt/homebrew/include \
     -L/opt/homebrew/lib \
@@ -35,7 +45,7 @@ if [ ! -x ./main ] || [ main.c -nt main ]; then
 fi
 
 if [ "$#" -eq 0 ]; then
-  exec ./main
+  exec "$APP_BIN"
 fi
 
 set -- 
@@ -47,4 +57,4 @@ for arg in $ARGS; do
 done
 IFS=$OLDIFS
 
-exec ./main "$@"
+exec "$APP_BIN" "$@"

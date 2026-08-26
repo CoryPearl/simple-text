@@ -32,7 +32,17 @@ Or use the short launcher:
 ./st README.md
 ```
 
-To make `st README.md` work from any terminal directory, put this project on your `PATH` or symlink `st` into a PATH directory, for example `/opt/homebrew/bin`.
+Install the global terminal command:
+
+```sh
+./install_cli.sh
+```
+
+After that, this works from any terminal directory and keeps working if this source folder is moved:
+
+```sh
+st README.md
+```
 
 ## Package as a Mac App
 
