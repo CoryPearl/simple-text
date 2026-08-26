@@ -58,37 +58,6 @@ cat > "$APP_DIR/Contents/Info.plist" <<EOF
             <key>CFBundleTypeExtensions</key>
             <array>
                 <string>txt</string>
-                <string>text</string>
-            </array>
-        </dict>
-        <dict>
-            <key>CFBundleTypeName</key><string>HTML Document</string>
-            <key>CFBundleTypeRole</key><string>Editor</string>
-            <key>LSHandlerRank</key><string>Alternate</string>
-            <key>LSItemContentTypes</key>
-            <array>
-                <string>public.html</string>
-            </array>
-            <key>CFBundleTypeExtensions</key>
-            <array>
-                <string>html</string>
-                <string>htm</string>
-            </array>
-        </dict>
-        <dict>
-            <key>CFBundleTypeName</key><string>Any Text-Like Document</string>
-            <key>CFBundleTypeRole</key><string>Editor</string>
-            <key>LSHandlerRank</key><string>Alternate</string>
-            <key>LSItemContentTypes</key>
-            <array>
-                <string>public.text</string>
-                <string>public.source-code</string>
-                <string>public.data</string>
-                <string>public.content</string>
-            </array>
-            <key>CFBundleTypeExtensions</key>
-            <array>
-                <string>*</string>
             </array>
         </dict>
     </array>

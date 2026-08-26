@@ -20,7 +20,7 @@
       Click+drag or Shift+arrows  select text
       Cmd+C/X/V  copy/cut/paste selection (or current line if nothing selected)
       Trackpad swipe or Shift+scroll to scroll left/right (only when a line overflows the view)
-      Drag and drop any file to open it as text.
+      Drag and drop a .md, .markdown, or .txt file to open it.
       Double-click or use Open With in Finder to open files here, once packaged
       as an .app with the Info.plist in this project (see package_mac_app.sh).
 */
@@ -132,8 +132,7 @@ static int has_supported_ext(const char *path) {
     char ext[32] = {0};
     int i = 0;
     for (; dot[i] && i < (int)sizeof(ext) - 1; i++) ext[i] = (char)tolower((unsigned char)dot[i]);
-    return strcmp(ext, ".md") == 0 || strcmp(ext, ".markdown") == 0 || strcmp(ext, ".txt") == 0 ||
-           strcmp(ext, ".html") == 0 || strcmp(ext, ".htm") == 0;
+    return strcmp(ext, ".md") == 0 || strcmp(ext, ".markdown") == 0 || strcmp(ext, ".txt") == 0;
 }
 
 static int has_any_ext(const char *path) {
@@ -269,6 +268,11 @@ static void editor_new(Editor *e) {
 }
 
 static int editor_load(Editor *e, const char *path) {
+    if (!has_supported_ext(path)) {
+        set_status("Only .md, .markdown, and .txt files are supported");
+        return 0;
+    }
+
     FILE *f = fopen(path, "rb");
     if (!f) {
         set_status("Could not open file");
@@ -321,6 +325,11 @@ static int editor_load(Editor *e, const char *path) {
 }
 
 static int editor_save_as(Editor *e, const char *path) {
+    if (!has_supported_ext(path)) {
+        set_status("Save path must end in .md, .markdown, or .txt");
+        return 0;
+    }
+
     FILE *f = fopen(path, "wb");
     if (!f) {
         set_status("Could not save file");
